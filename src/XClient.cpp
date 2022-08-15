@@ -1,6 +1,8 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include "XClient.h"
 
@@ -13,26 +15,27 @@ void XClient::Connect(){
     if(dpy){
         screen = DefaultScreen(dpy);
         root = DefaultRootWindow(dpy);
-        win = XCreateSimpleWindow(dpy, root,0,0,DisplayWidth(dpy,screen),DisplayHeight(dpy,screen),0,0,0);
-        XMapRaised(dpy,win);
-        XSelectInput(dpy,win,ExposureMask | KeyPressMask);
-        XGetWindowAttributes(dpy,win,&xattr);
         XFlush(dpy);
     }
 
     else std::cout << "Failed to connect with XServer" << '\n';
 }
 
-void XClient::setcm(int c_class){
+void XClient::setcm(){
 
-    Visual* tmp;
-    int vinfo_return;
-    XVisualInfo xvinfo;
-    xvinfo.c_class = c_class;
+    colormap = XCreateColormap(dpy, root, xvinfo -> visual, AllocNone); 
 
-    tmp = (XGetVisualInfo(dpy,VisualClassMask,&xvinfo,&vinfo_return))->visual;
+    XInstallColormap(dpy,colormap);
+}
 
-    colormap = XCreateColormap(dpy, win, tmp, AllocNone); 
+void XClient::createwindow(){
+
+    win = XCreateWindow(dpy,root,0,0,XDisplayWidth(dpy,screen),XDisplayHeight(dpy,screen),0,xvinfo->depth,InputOutput,xvinfo->visual, CWColormap | CWEventMask, &xattr);
+
+    XMapRaised(dpy,win);
+    XGetWindowAttributes(dpy,win,&xwinattr);
+    XStoreName(dpy,win, "pp3dObjectViewer");
+    XFlush(dpy);
 }
 
 /* takes rgb values from 0 to 255 and converts it to 24 bit pixel value */
@@ -42,6 +45,8 @@ unsigned long XClient::RGBtoPixel_24(int R, int G, int B){
 
 void XClient::Close(){
     XFreeColormap(dpy, colormap);
+    XDestroyWindow(dpy,win);
+    XFreeGC(dpy,gc);
     XCloseDisplay(dpy);
     exit(1);
 }

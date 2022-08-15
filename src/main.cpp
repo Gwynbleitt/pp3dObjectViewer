@@ -1,40 +1,55 @@
 #include <iostream>
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include "XClient.h"
 
 using XFunctions::XClient;
 
-XClient x;
-GC gc;
-XGCValues gcinfo;
+XClient     x;
+XGCValues   gcinfo;
 
 int main(){
+
     x.Connect();
-    x.setcm(TrueColor);
 
-    /* verify depth */
+    int attrib_list[] = {
+        GLX_RGBA,
+        GLX_DEPTH_SIZE, 24,
+        GLX_DOUBLEBUFFER, None
+    };
 
-    std::cout << DefaultDepth(x.dpy,x.screen) << '\n';
+    x.xvinfo = glXChooseVisual(x.dpy, x.screen, attrib_list);
 
+    x.setcm();
+
+    x.xattr.colormap = x.colormap;
+    x.xattr.event_mask = ExposureMask | KeyPressMask ;
+
+    x.createwindow();
+ 
     /* Graphics Context */
 
     gcinfo.foreground = x.RGBtoPixel_24(200,50,200);
     gcinfo.line_width = 10;
 
-    gc = XCreateGC(x.dpy,x.win,GCForeground | GCLineWidth,&gcinfo);
+    x.gc = XCreateGC(x.dpy,x.win,GCForeground | GCLineWidth,&gcinfo);
 
     /* Event Handling Loop */
 
     XEvent event;
 
     for(;;){
+        
         XNextEvent(x.dpy,&event);
 
         switch(event.type){
             case(Expose):
-            XDrawLine(x.dpy,x.win,gc,0,0,100,100);
+            XDrawLine(x.dpy,x.win,x.gc,0,0,100,100);
             break;
             case(KeyPress):
                 std::cout << event.xkey.keycode << '\n';
@@ -44,8 +59,8 @@ int main(){
                     default:break;
                 }
                 break;
-            default:break;
-            
+
+            default:break;         
         }
     }
     
