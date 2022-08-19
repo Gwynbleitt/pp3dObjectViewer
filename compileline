@@ -1,0 +1,1 @@
+g++ main.cpp XClient.cpp -o a -I /usr/include/X11 -I ~/pp3dObjectViewer/headers/ -L /usr/X11/lib -lX11 -lGL -lGLU

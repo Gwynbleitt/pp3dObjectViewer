@@ -6,7 +6,6 @@
 
 #include "XClient.h"
 
-using namespace XFunctions;
 
 void XClient::Connect(){
 
@@ -18,7 +17,10 @@ void XClient::Connect(){
         XFlush(dpy);
     }
 
-    else std::cout << "Failed to connect with XServer" << '\n';
+    else{
+         std::cout << "Failed to connect with XServer" << '\n';
+         exit(EXIT_FAILURE);
+    }
 }
 
 void XClient::setcm(){
@@ -39,6 +41,7 @@ void XClient::createwindow(){
 }
 
 /* takes rgb values from 0 to 255 and converts it to 24 bit pixel value */
+
 unsigned long XClient::RGBtoPixel_24(int R, int G, int B){
     return (65536*R) + (256*G) + B;
 }
@@ -48,5 +51,5 @@ void XClient::Close(){
     XDestroyWindow(dpy,win);
     XFreeGC(dpy,gc);
     XCloseDisplay(dpy);
-    exit(1);
+    exit(EXIT_FAILURE);
 }

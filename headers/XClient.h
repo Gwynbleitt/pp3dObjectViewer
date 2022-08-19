@@ -1,11 +1,13 @@
+
+#ifndef XCLIENT_H
+#define XCLIENT_H
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include<GL/glx.h>
 #include<GL/glu.h>
 
 
-namespace XFunctions
-{
 
 class XClient{
     public:
@@ -20,6 +22,7 @@ class XClient{
     XWindowAttributes       xwinattr;
     GC                      gc;
     XVisualInfo*            xvinfo;
+    XGCValues               gcinfo;
 
     /* OpenGL Varibles */
 
@@ -38,4 +41,5 @@ class XClient{
     unsigned long RGBtoPixel_24(int R, int G, int B); 
 };
 
-}
+
+#endif
