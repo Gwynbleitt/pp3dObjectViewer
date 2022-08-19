@@ -1,9 +1,3 @@
-#include <iostream>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-
 #include "object.h"
 
 gl_object::gl_object(unsigned short n, float arr[][3]){

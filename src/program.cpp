@@ -1,9 +1,3 @@
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <GL/glx.h>
-#include <GL/glu.h>
-#include <iostream>
-
 #include "program.h"
 
 Program::Program(int* attr_list, int eventmask){
@@ -21,7 +15,6 @@ Program::Program(int* attr_list, int eventmask){
     glXMakeCurrent(x.dpy, x.win, x.glxc);
 
     glEnable(GL_DEPTH_TEST); 
-
 }
 
 Program::~Program(){

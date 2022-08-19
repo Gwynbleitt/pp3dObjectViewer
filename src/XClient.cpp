@@ -1,9 +1,3 @@
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <iostream>
-#include <GL/gl.h>
-#include <GL/glu.h>
-
 #include "XClient.h"
 
 
