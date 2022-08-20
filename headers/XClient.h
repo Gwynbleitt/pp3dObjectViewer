@@ -8,6 +8,8 @@
 #include <GL/glu.h>
 #include <iostream>
 
+
+
 class XClient{
     public:
     

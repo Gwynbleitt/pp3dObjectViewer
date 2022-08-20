@@ -8,12 +8,13 @@
 
 class gl_object{
 
-    /* x,y,z */
-
-    float** vertex_global_cords,
-    vertex_count;
+    unsigned short vertex_count;
 
     public:
+
+    /* x,y,z */
+    float** vertex_global_cords,
+    * origin_cords;
 
     gl_object(unsigned short n, float arr[][3]);
 

@@ -8,19 +8,29 @@
 
 class Program{
 
+    char log[512];
+    const char          *vshadersrc,*fshadersrc;
+    unsigned int        vertexbuffer, 
+    /**/                vertexshader, fragmentshader, 
+    /**/                shader_program;
+    XEvent              event;
+    GLXContext          glxc;
+    float*              bgcolor;
+
     public:
 
-    Program(int* attr_list, int eventmask);
+    Program(int* attr_list, int eventmask, float color[3]);
     ~Program();
     
     XClient             x;
     gl_object*          object;
-    GLXContext          glxc;
-    XEvent event;
     
-    void createobject(int n, float vertex_cordinates[][3]);
-    void deleteobject();
-    void Event_Loop();
+    bool SHADER_COMPILATION_CHECK (unsigned int shaderid),
+         SHADER_LINK_CHECK (unsigned int shaderprogram);
+    void createobject(unsigned short n, float vertex_cordinates[][3]),
+         deleteobject(),
+         Event_Loop(),
+         redraw();
   
 };
 
