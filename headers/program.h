@@ -10,12 +10,17 @@ class Program{
 
     char log[512];
     const char          *vshadersrc,*fshadersrc;
-    unsigned int        vertexbuffer, 
+    unsigned int        VBO, VAO,
     /**/                vertexshader, fragmentshader, 
     /**/                shader_program;
     XEvent              event;
     GLXContext          glxc;
-    float*              bgcolor;
+    float               *bgcolor;
+    int                 n_fbconf;
+    GLXFBConfig         *fb_conf,
+                        best_fb_conf;
+    GLXWindow           glx_window; 
+    //static bool                glxcErrorOccurred;
 
     public:
 
@@ -27,10 +32,12 @@ class Program{
     
     bool SHADER_COMPILATION_CHECK (unsigned int shaderid),
          SHADER_LINK_CHECK (unsigned int shaderprogram);
-    void createobject(unsigned short n, float vertex_cordinates[][3]),
+    void createobject(unsigned short n, float vertex_cordinates[]),
          deleteobject(),
-         Event_Loop(),
+         drawobject(),
+         Event_Loop(unsigned short n, float vertex_cordinates[]),
          redraw();
+     //static int glxcErrorHandler(Display* dpy, XErrorEvent *e);
   
 };
 

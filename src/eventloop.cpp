@@ -1,7 +1,12 @@
 #define GL_GLEXT_PROTOTYPES
 #include "program.h"
 
-void Program::Event_Loop(){
+void Program::Event_Loop(unsigned short n, float vertex_cordinates[]){
+
+    XGetWindowAttributes(x.dpy, x.win, &x.xwinattr);
+    glViewport(0, 0, x.xwinattr.width, x.xwinattr.height); 
+
+    createobject(n, vertex_cordinates);
 
     for(;;){
         

@@ -7,16 +7,14 @@
 #include <GL/glu.h>
 
 class gl_object{
-
-    unsigned short vertex_count;
-
     public:
-
+    
+    unsigned short vertex_count;
     /* x,y,z */
-    float** vertex_global_cords,
+    float* vertex_global_cords,
     * origin_cords;
 
-    gl_object(unsigned short n, float arr[][3]);
+    gl_object(unsigned short n, float arr[]);
 
     ~gl_object();
 

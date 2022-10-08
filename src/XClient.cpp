@@ -10,7 +10,6 @@ void XClient::Connect(){
         root = DefaultRootWindow(dpy);
         XFlush(dpy);
     }
-
     else{
          std::cout << "Failed to connect with XServer" << '\n';
          exit(EXIT_FAILURE);
@@ -27,10 +26,6 @@ void XClient::setcm(){
 void XClient::createwindow(){
 
     win = XCreateWindow(dpy,root,0,0,XDisplayWidth(dpy,screen),XDisplayHeight(dpy,screen),0,xvinfo->depth,InputOutput,xvinfo->visual, CWColormap | CWEventMask, &xattr);
-
-    XMapRaised(dpy,win);
-    XGetWindowAttributes(dpy,win,&xwinattr);
-    XStoreName(dpy,win, "pp3dObjectViewer");
     XFlush(dpy);
 }
 

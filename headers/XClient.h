@@ -25,9 +25,6 @@ class XClient{
     XVisualInfo*            xvinfo;
     XGCValues               gcinfo;
 
-    /* OpenGL Varibles */
-
-    GLXContext glxc;
 
     /* main methods */
 
