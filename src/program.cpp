@@ -12,13 +12,13 @@ Program::Program(int* attr_list, int eventmask, float color[3]){
 
     glXCreateContextAttribsARBProc glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc) glXGetProcAddressARB( (const GLubyte *) "glXCreateContextAttribsARB" );
 
-    vshadersrc = "#version 460 core\n"
+    vshadersrc = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
     "{\n"
     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\0";
-    fshadersrc = "#version 460 core\n"
+    fshadersrc = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "void main()\n"
     "{\n"
@@ -64,8 +64,8 @@ Program::Program(int* attr_list, int eventmask, float color[3]){
     x.createwindow();
     
     int c_attr[]{
-        GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
-        GLX_CONTEXT_MINOR_VERSION_ARB, 6,
+        GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+        GLX_CONTEXT_MINOR_VERSION_ARB, 0,
         None
     };
 
@@ -151,8 +151,8 @@ void Program::createobject(unsigned short n, float vertex_cordinates[]){
 
     std::cout << "SHADER PROGRAM LINKED\n";
 
-    /*glDeleteShader(vertexshader);
-    glDeleteShader(fragmentshader);*/
+    glDeleteShader(vertexshader);
+    glDeleteShader(fragmentshader);
 
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(float),(void*)0);
     glEnableVertexAttribArray(0);
@@ -178,6 +178,6 @@ void Program::redraw(){
    glViewport(0, 0, x.xwinattr.width, x.xwinattr.height);  
    glClearColor(bgcolor[0],bgcolor[1],bgcolor[2], 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
-   //drawobject();
+   drawobject();
 }
 
