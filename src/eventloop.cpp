@@ -3,9 +3,6 @@
 
 void Program::Event_Loop(unsigned short n, float vertex_cordinates[]){
 
-    XGetWindowAttributes(x.dpy, x.win, &x.xwinattr);
-    glViewport(0, 0, x.xwinattr.width, x.xwinattr.height); 
-
     createobject(n, vertex_cordinates);
 
     for(;;){
@@ -14,6 +11,7 @@ void Program::Event_Loop(unsigned short n, float vertex_cordinates[]){
 
         switch(event.type){
             case(Expose):
+                printf("EXPOSE\n");
                 redraw();
                 break;
             case(KeyPress):

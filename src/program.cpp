@@ -71,19 +71,19 @@ Program::Program(int* attr_list, int eventmask, float color[3]){
 
     x.gc = XCreateGC(x.dpy,x.win,None,&x.gcinfo);
     glxc = glXCreateContextAttribsARB(x.dpy, best_fb_conf, 0, true, c_attr);
-    //glXMakeCurrent(x.dpy, x.win, glxc);
-    glx_window = glXCreateWindow(x.dpy, best_fb_conf, x.win, None);
+    glXMakeCurrent(x.dpy, x.win, glxc);
+    /*glx_window = glXCreateWindow(x.dpy, best_fb_conf, x.win, None);
 
     if( !glx_window ) {
 		printf( "failed to open glx window\n" );
-	}
+	}*/
 
     XMapRaised(x.dpy,x.win);
     XGetWindowAttributes(x.dpy,x.win,&x.xwinattr);
     XStoreName(x.dpy,x.win, "pp3dObjectViewer");
     
-    glXMakeContextCurrent(x.dpy, glx_window, glx_window, glxc);
-        
+    //glXMakeContextCurrent(x.dpy, glx_window, glx_window, glxc);
+    glXMakeCurrent(x.dpy, x.win, glxc);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE); 
@@ -178,6 +178,6 @@ void Program::redraw(){
    glViewport(0, 0, x.xwinattr.width, x.xwinattr.height);  
    glClearColor(bgcolor[0],bgcolor[1],bgcolor[2], 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
-   drawobject();
+   //drawobject();
 }
 
