@@ -1,43 +1,46 @@
-
 #ifndef PROGRAM_H
 #define PROGRAM_H
 
-#include "XClient.h"
-#include "object.h"
-
+#include  "glad/glad.h"
+#include  <GLFW/glfw3.h>
+#include  <stdio.h>
+#include  <stdlib.h>
+#include  <fstream>
+#include  <iostream>
+#include  "object.h"
+#include  <cstring>
 
 class Program{
 
+    private: 
+
     char log[512];
-    const char          *vshadersrc,*fshadersrc;
+    
     unsigned int        VBO, VAO,
     /**/                vertexshader, fragmentshader, 
     /**/                shader_program;
-    XEvent              event;
-    GLXContext          glxc;
     float               *bgcolor;
-    int                 n_fbconf;
-    GLXFBConfig         *fb_conf,
-                        best_fb_conf;
-    GLXWindow           glx_window; 
-    //static bool                glxcErrorOccurred;
+    GLFWwindow          *win;
+    GLFWmonitor         *monitor;
+    const GLFWvidmode   *vid_mode;
 
     public:
 
-    Program(int* attr_list, int eventmask, float color[3]);
+    Program(float color[3], bool FULLSCREEN);
     ~Program();
-    
-    XClient             x;
+
     gl_object*          object;
     
-    bool SHADER_COMPILATION_CHECK (unsigned int shaderid),
-         SHADER_LINK_CHECK (unsigned int shaderprogram);
-    void createobject(unsigned short n, float vertex_cordinates[]),
-         deleteobject(),
-         drawobject(),
-         Event_Loop(unsigned short n, float vertex_cordinates[]),
-         redraw();
-     //static int glxcErrorHandler(Display* dpy, XErrorEvent *e);
+    bool  SHADER_COMPILATION_CHECK (unsigned int shaderid),
+          SHADER_LINK_CHECK (unsigned int shaderprogram);
+    void  createobject(unsigned short n, float vertex_cordinates[]),
+          deleteobject(),
+          drawobject(),
+          Event_Loop(),
+          redraw();
+    std::string read_shader(std::string path);
+    static void framebuffer_size_callback(GLFWwindow* window, int width, int height),
+                key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
   
 };
 
