@@ -1,23 +1,28 @@
-#define GL_GLEXT_PROTOTYPES
 #include "program.h"
 
 
 int main(int argc, char* argv[]){
     
     if(glfwInit()){
-
-        float vertex_cord_arr[]  = { 
-            -0.5f, -0.5f, 0.0f, 
-            0.5f, -0.5f, 0.0f, 
-            0.0f,  0.5f, 0.0f
-        },
         
-        color[3] = {0.0f,0.5f,1.0f};
+        float vertex_cord_arr[]  = {
+            //VERTEX CORDS          //VERTEX COLOR 
+            -0.5f, -0.5f, 0.0f,     1.0f, 0.0f,1.0f,
+            0.5f,  -0.5f, 0.0f,     0.0f, 1.0f,0.0f,
+            0.5f,  0.5f, 0.0f,      0.0f, 0.0f,1.0f,
+            -0.5f, 0.5f, 0.0f,      0.0f, 1.0f, 1.0f
+        };
+        unsigned int indeces[]={
+            0,1,3,
+            1,2,3
+        };
 
-        Program* program = new Program(color, 0);
+        Program* program = new Program();
 
-        program -> createobject(3, vertex_cord_arr);
+        program -> createmesh(sizeof(vertex_cord_arr),sizeof(indeces),vertex_cord_arr, indeces);
         program -> Event_Loop();
+
+        delete program;
         
         return EXIT_SUCCESS;
     

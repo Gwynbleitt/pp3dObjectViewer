@@ -1,1 +1,1 @@
-g++ *.cpp -o a -I /usr/include/X11 -I /home/staszekjedi/pp3dObjectViewer/headers/ -L /usr/X11/lib -lX11 -lGL -lGLU
+g++ *.cpp glad.c -o a -I /usr/include/X11  -I ../include/ -lglfw  -lX11 -lGL -lGLU
