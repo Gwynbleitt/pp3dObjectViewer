@@ -12,7 +12,7 @@ void Program::key_callback(GLFWwindow* window, int key, int scancode, int action
         case GLFW_KEY_Q:
             exit(EXIT_FAILURE);
             break;
-        default: printf("pressed:%i\n",key);break;
+        default: break;
     }
 }
 
@@ -44,6 +44,11 @@ Program::Program(){
         delete this;
         printf("failed to load GLAD\n");
     }
+    x,y,z = 0.0f;
+    transform = glm::mat4(1.0f);
+
+    std::cout << "matrix:\n";
+    glm::print_matrix<glm::mat4>(transform,4);
 }
 
 Program::~Program(){
@@ -80,16 +85,21 @@ void Program::createmesh(int vertices_size, int indices_size, float vertex_cordi
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
-void Program::drawmesh(){
+void Program::drawmesh(float deltax, float deltay, float deltaz, int delta_angle){
     glUseProgram(shader_object -> shader_program);
-    glBindVertexArray(VAO); 
+    glBindVertexArray(VAO);
+
+    transform = glm::translate<glm::mat4>(transform,4, deltax, deltay, deltaz);
+    transform = glm::rotate<glm::mat4>(transform,4,rotate_axis,delta_angle);
+
+    glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "transform"), 1, false, glm::value_ptr(transform));
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+    glBindVertexArray(0);
 }
 
 void Program::redraw(){
     glClearColor(.3f,.3f,.9f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    drawmesh();
 }
 
 
