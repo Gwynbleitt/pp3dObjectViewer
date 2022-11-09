@@ -1,32 +1,35 @@
 #ifndef PROGRAM_H
 #define PROGRAM_H
+#define PI 3.14159265359f
 
 #include "shader.h"
-#include "glm_transform.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
 class Program{
 
       unsigned int        VBO, VAO, EBO;
-      GLFWwindow          *win;
       GLFWmonitor         *monitor;
       const GLFWvidmode   *vid_mode;
       shader              *shader_object;
+      int                 n_vertices;
 
-      float x,y,z;
-      int angle;
+      glm::vec3 translation;
+      glm::vec3 rotation;
 
-      glm::vec3 rotate_axis;
-
-      glm::mat4 transform;
+      glm::mat4 transform_matrix;
+      glm::mat4 projection_matrix;
       
-      void  drawmesh(float deltax, float deltay, float deltaz, int delta_angle),
+      void  drawmesh(glm::vec3 translate, glm::vec3 rotate),
             redraw();
             
-      static void framebuffer_size_callback(GLFWwindow* window, int width, int height),
-                  key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+      static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods),
+                  framebuffer_size_callback(GLFWwindow* window, int width, int height);
       
       public:
+
+      
+      GLFWwindow *win;
+      int fbwidth, fbheight;
 
       void  createmesh(int vertices_size, int indices_size, float vertex_cordinates[], unsigned int indices[]),
             Event_Loop(float speed);

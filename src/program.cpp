@@ -1,11 +1,5 @@
 #include "program.h"
-
-void Program::framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
-    printf("framebuffer callback\n");
-}
-
+#include "glm_transform.hpp"
 void Program::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     if(action==1) switch(key){
         case GLFW_KEY_ESCAPE:
@@ -14,6 +8,12 @@ void Program::key_callback(GLFWwindow* window, int key, int scancode, int action
             break;
         default: break;
     }
+}
+
+void Program::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+    printf("framebuffer callback\n");
 }
 
 Program::Program(){
@@ -37,18 +37,21 @@ Program::Program(){
 
     glfwMakeContextCurrent( win );
     
-    glfwSetFramebufferSizeCallback(win, framebuffer_size_callback);
     glfwSetKeyCallback(win, key_callback);
+    glfwSetFramebufferSizeCallback(win, framebuffer_size_callback);
 
     if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)){
         delete this;
         printf("failed to load GLAD\n");
     }
-    x,y,z = 0.0f;
-    transform = glm::mat4(1.0f);
+
+    translation = glm::vec3(0.0f);
+    rotation = glm::vec3(0.0f);
+    transform_matrix = glm::mat4(1.0f);
+    projection_matrix = glm::mat4(1.0f);
 
     std::cout << "matrix:\n";
-    glm::print_matrix<glm::mat4>(transform,4);
+    glm::print_matrix<glm::mat4>(transform_matrix,4);
 }
 
 Program::~Program(){
@@ -76,30 +79,45 @@ void Program::createmesh(int vertices_size, int indices_size, float vertex_cordi
     glBufferData(GL_ARRAY_BUFFER, vertices_size, vertex_cordinates, GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_size, indices, GL_STATIC_DRAW);
     //position attribute 
-    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 6*sizeof(float), (void*)0 );
+    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 3*sizeof(float), (void*)0 );
     glEnableVertexAttribArray(0);
-    //color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, 0, 6*sizeof(float), (void*)(3*sizeof(float)));
-    glEnableVertexAttribArray(1);
 
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    n_vertices = indices_size/sizeof(int);
+
+    glEnable(GL_DEPTH_TEST);
+
+    // projection matrix
+    glfwGetFramebufferSize(win, &fbwidth, &fbheight);
+    projection_matrix = glm::proj_matrix_my(projection_matrix, 90, fbwidth / (float) fbheight , 0.1f, 2.f);
+    //projection_matrix[2][3] = -1.0f;
+    glm::print_matrix<glm::mat4>(projection_matrix,4);
+    
+
 }
 
-void Program::drawmesh(float deltax, float deltay, float deltaz, int delta_angle){
+void Program::drawmesh(glm::vec3 translate, glm::vec3 rotate){
     glUseProgram(shader_object -> shader_program);
     glBindVertexArray(VAO);
 
-    transform = glm::translate<glm::mat4>(transform,4, deltax, deltay, deltaz);
-    transform = glm::rotate<glm::mat4>(transform,4,rotate_axis,delta_angle);
+    transform_matrix = glm::translate<glm::mat4>(transform_matrix,4, translate);
+    transform_matrix = glm::rotateY<glm::mat4>(transform_matrix,4,rotate[2]);
 
-    glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "transform"), 1, false, glm::value_ptr(transform));
-    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+    glfwGetFramebufferSize(win, &fbwidth, &fbheight);
+    std::cout << fbwidth << ',' <<  fbheight << '\n';
+    projection_matrix = glm::proj_matrix_my(projection_matrix, 90, fbwidth / (float) fbheight , -0.5f, 0.5f);
+
+    //transform_matrix = glm::rotateY<glm::mat4>(transform_matrix,4,rotate[1]);
+    glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "projection"), 1, false, glm::value_ptr(projection_matrix));
+    glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "transform"), 1, false, glm::value_ptr(transform_matrix));
+    glDrawElements(GL_TRIANGLES,n_vertices,GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
 }
 
 void Program::redraw(){
-    glClearColor(.3f,.3f,.9f,1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    //glClearColor(0.0f,0.0f,0);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 }
 
 
