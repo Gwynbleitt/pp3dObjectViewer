@@ -3,6 +3,7 @@
 #define PI 3.14159265359f
 
 #include "shader.h"
+#include "camera.h"
 #include <glm/gtc/type_ptr.hpp>
 
 class Program{
@@ -16,8 +17,11 @@ class Program{
       glm::vec3 translation;
       glm::vec3 rotation;
 
+      glm::mat4 view_matrix;
       glm::mat4 transform_matrix;
       glm::mat4 projection_matrix;
+
+      camera* cam1;
       
       void  drawmesh(glm::vec3 translate, glm::vec3 rotate),
             redraw();

@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
         Program* program = new Program();
 
         program -> createmesh(sizeof(vertex_cord_arr),sizeof(indeces),vertex_cord_arr, indeces);
-        program -> Event_Loop(0.01f);
+        program -> Event_Loop(0.05f);
 
         delete program;
         
