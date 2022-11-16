@@ -2,9 +2,9 @@
 
 out vec4 FragColor;
 
-//in vec4 position;
+in float col;
 
 
 void main(){
-    FragColor = vec4(1.0,1.0,1.0,1.0);
+    FragColor = vec4(vec3(col),1.);
 }

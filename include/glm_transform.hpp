@@ -84,8 +84,8 @@ namespace glm{
 
         matrix[2][3] = -1.0f;
         matrix[0][0] = n/r; 
-        matrix[1][1] = n/r; 
-        matrix[2][2] = f/(n-f);
+        matrix[1][1] = n/t; 
+        matrix[2][2] = (f+n)/(n-f);
         matrix[3][2] = 2*f*n/(n-f);
 
         return matrix;

@@ -15,7 +15,8 @@ class Program{
       int                 n_vertices;
 
       glm::vec3 translation;
-      glm::vec3 rotation;
+      glm::vec3 direction;
+      glm::vec2 rotation; //yaw, pitch
 
       glm::mat4 view_matrix;
       glm::mat4 transform_matrix;
@@ -23,7 +24,7 @@ class Program{
 
       camera* cam1;
       
-      void  drawmesh(glm::vec3 translate, glm::vec3 rotate),
+      void  drawmesh(glm::vec3 translate, glm::vec2 rotate),
             redraw();
             
       static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods),

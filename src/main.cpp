@@ -1,12 +1,24 @@
 #include "program.h"
+#include "obj_loader.h"
 
 int main(int argc, char* argv[]){
     
     if(glfwInit()){
+
+        obj_loader* loader = new obj_loader;
+
         
-        float vertex_cord_arr[]  = {
-            /* VERTEX CORDS
-              X      Y     Z */       
+        loader->path = "../models/suzanne.obj";
+        loader->load_vert();
+        loader->load_index();
+
+        
+        
+        float vertex_cord_arr[] //= loader -> load_vert();
+
+          = {
+            
+            //  X      Y     Z      
              0.5f,  0.5f,  0.5f, //0          3---0 
              0.5f, -0.5f,  0.5f, //1          |   |  
             -0.5f, -0.5f,  0.5f, //2          2---1 
@@ -17,8 +29,12 @@ int main(int argc, char* argv[]){
             -0.5f, -0.5f, -0.5f, //6          6---5 
             -0.5f,  0.5f, -0.5f  //7           
 
-        };
-        unsigned int indeces[]={
+        }; 
+
+        
+        unsigned int indeces[] //= loader->load_index();
+        
+        ={
 
             0,1,3,
             1,2,3,
@@ -38,6 +54,8 @@ int main(int argc, char* argv[]){
             6,5,2,
             2,1,5
         };
+        
+        delete loader;
 
         Program* program = new Program();
 
