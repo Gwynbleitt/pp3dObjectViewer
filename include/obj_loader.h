@@ -12,6 +12,14 @@ class obj_loader{
 
     std::string path;
 
+    int index_n;
+    int vertex_n;
+
+    float* vertex;
+    unsigned int* index;
+
+    void load();
+
     float* load_vert();
     unsigned int* load_index();
 

@@ -26,38 +26,6 @@ namespace glm{
         return matrix;
     }
 
-    template<typename matn>
-    matn rotateX(matn matrix, int n, float angle){
-
-        matrix[1][1] = cos(angle);
-        matrix[2][1] = -sin(angle);
-        matrix[1][2] = sin(angle);
-        matrix[2][2] = cos(angle);
-        
-        return matrix;
-    }
-    template<typename matn>
-    matn rotateY(matn matrix, int n, float angle){
-        
-        matrix[0][0] = cos(angle);
-        matrix[2][0] = sin(angle);
-        matrix[0][2] = -sin(angle);
-        matrix[2][2] = cos(angle);
-        
-        return matrix;
-    }
-
-    template<typename matn>
-    matn rotateZ(matn matrix, int n, float angle){
-
-        matrix[0][0] = cos(angle);
-        matrix[1][0] = -sin(angle);
-        matrix[0][1] = sin(angle);
-        matrix[1][1] = cos(angle);
-        
-        
-        return matrix;
-    }
 
     mat4 proj_matrix_my(mat4 matrix, float FOV, float aspect, float n, float f){
 
@@ -66,16 +34,6 @@ namespace glm{
         FRUSTUM CULLING:
         near plane -> n
         far plane  -> f
-
-        EYE_CORDS -> CLIP_CORDS
-
-        aspect = width/height
-        
-
-        matrix[0][0] = 2*n/(r-l); 
-        matrix[0][2] = (r+l)/(r-l); 
-        matrix[1][1] = 2*n/(t-b); 
-        matrix[1][2] = (t+b)/(t-b); 
 
         */
 

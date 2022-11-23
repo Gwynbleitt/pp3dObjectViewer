@@ -66,7 +66,12 @@ Program::~Program(){
 }
 
 
-void Program::createmesh(int vertices_size, int indices_size, float vertex_cordinates[], unsigned int indices[]){
+void Program::createmesh(int vertices_size, int indices_size, float* vertex_cordinates, unsigned int* indices){
+    std::cout << "index size" << indices_size << '\n';
+    for(int i = 0; i < indices_size; i++){
+        std::cout << indices[i] << ',';
+        //if(i%3==0)std::cout << '\n';
+    }
 
     shader_object = new shader("../shaders/shader.vert","../shaders/shader.frag");
 
@@ -100,6 +105,9 @@ void Program::createmesh(int vertices_size, int indices_size, float vertex_cordi
 }
 
 void Program::drawmesh(glm::vec3 translate, glm::vec2 rotate){
+
+
+    
     glUseProgram(shader_object -> shader_program);
     glBindVertexArray(VAO);
     glfwGetFramebufferSize(win, &fbwidth, &fbheight);
@@ -108,23 +116,30 @@ void Program::drawmesh(glm::vec3 translate, glm::vec2 rotate){
     //translate = glm::vec3(cos(glfwGetTime()) * 1.f, 0.0f, sin(glfwGetTime()) * 1.f);
     //cam1->pos = translate;
     
-    direction.x = cos(rotate.x)*cos(rotate.y);
-    direction.y = sin(rotate.y);
-    direction.z = sin(rotate.x)*cos(rotate.y);
+    //direction.x = cos(rotate.x)*cos(rotate.y);
+    //direction.y = sin(rotate.y);
+    //direction.z = sin(rotate.x)*cos(rotate.y);
 
-    
 
+    //translate = glm::vec3(0.0f);
+
+
+   
+
+    float camx = sin(glfwGetTime()) * 1.f;
+    float camz = cos(glfwGetTime()) * 1.f;
+    //cam1->pos = ;
     //direction = glm::vec3(0.f,0.f,1.f);
     
     
-    transform_matrix = cam1->translate(transform_matrix, translate);
+    transform_matrix = cam1->translate(transform_matrix, glm::vec3(camx,0.f,camz));
     view_matrix = cam1->lookat(view_matrix,direction);
     projection_matrix = glm::proj_matrix_my(projection_matrix, 45, fbwidth / (float) fbheight , 1.f, 100.0f);
-
+    
     //transform_matrix = glm::rotateY(transform_matrix,4,rotate[0]);
 
-    //std::cout << "------------------\n";
-    //glm::print_matrix<glm::mat4>(view_matrix,4); 
+    std::cout << "------------------\n";
+    glm::print_matrix<glm::mat4>(view_matrix,4); 
     
     glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "transform"), 1, false, glm::value_ptr(transform_matrix));
     glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "projection"), 1, false, glm::value_ptr(projection_matrix));

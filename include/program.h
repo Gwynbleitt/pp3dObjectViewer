@@ -36,7 +36,7 @@ class Program{
       GLFWwindow *win;
       int fbwidth, fbheight;
 
-      void  createmesh(int vertices_size, int indices_size, float vertex_cordinates[], unsigned int indices[]),
+      void  createmesh(int vertices_size, int indices_size, float* vertex_cordinates, unsigned int* indices),
             Event_Loop(float speed);
 
       Program();
