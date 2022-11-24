@@ -16,16 +16,15 @@ class Program{
 
       glm::vec3 translation;
       glm::vec3 direction;
+      glm::vec2 direction2d;
       glm::vec2 rotation; //yaw, pitch
 
       glm::mat4 view_matrix;
-      glm::mat4 transform_matrix;
       glm::mat4 projection_matrix;
 
       camera* cam1;
       
-      void  drawmesh(glm::vec3 translate, glm::vec2 rotate),
-            redraw();
+      void  drawmesh(glm::vec3 translate, glm::vec2 rotate);
             
       static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods),
                   framebuffer_size_callback(GLFWwindow* window, int width, int height);

@@ -61,7 +61,24 @@ namespace glm{
         }
     }
 
+    template<typename matn>
+    matn rotate2(matn vec, float yaw, float pitch){
 
+        vec.x = cos(yaw)*cos(pitch);
+        vec.y = sin(pitch);
+        vec.z = sin(yaw)*cos(pitch);
+
+        return vec;
+    }
+
+    template<typename matn>
+    matn rotate1(matn vec, float yaw){
+
+        vec.x = cos(yaw);
+        vec.y = sin(yaw);
+
+        return vec;
+    }
 
 
 };

@@ -12,6 +12,7 @@ int main(int argc, char* argv[]){
 
         Program* program = new Program();
 
+    
         program -> createmesh(loader->vertex_n * sizeof(float),loader->index_n * sizeof(unsigned int),loader -> vertex, loader-> index);
 
         delete loader;

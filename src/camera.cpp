@@ -1,47 +1,25 @@
 #include "camera.h"
 #include <iostream>
 
-camera::camera(glm::vec3 view_origin, glm::vec3 cords){
-    pos = cords;
-    target = view_origin;
+camera::camera(glm::vec3 cords, unsigned int shader_program, const char* var_name){
+    glUniform3f(glGetUniformLocation(shader_program, var_name), cords.x,cords.y,cords.z);
 }
 
-glm::mat4 camera::translate(glm::mat4 transform, glm::vec3 trans_vec){
+glm::mat4 camera::lookat(glm::mat4 view_matrix, glm::vec3 d, glm::vec3 t){
 
-    /*pos[0]=glm::normalize(glm::cross(glm::vec3(0.f,0.f,-1.f), glm::vec3(0.f,1.f,0.f))).x * trans_vec[0];
-    pos[1]=-1*trans_vec[1];
-    pos[2]=-1*trans_vec[2];*/
-    pos = trans_vec;
-    //target = trans_vec;
-    transform[3][0] = trans_vec.x;
-    transform[3][1] = trans_vec.y;
-    transform[3][2] = trans_vec.z;
-    
-    return transform;
-}
-
-glm::mat4 camera::lookat(glm::mat4 view_matrix, glm::vec3 direction){
-
-    direction = glm::normalize(pos-target);
-
-    //std::cout << direction.x <<  ',' << direction.y << ',' << direction.z << '\n';
-    right = glm::normalize(glm::cross(direction, glm::vec3(0.f,1.f,0.f)));
-    up = glm::normalize(glm::cross(right, direction));
+    r = glm::normalize(glm::cross(d, glm::vec3(0.f,1.f,0.f)));
+    u = glm::normalize(glm::cross(r, d));
 
 
-    /*for(int i = 0; i <= 2; i++){
-        view_matrix[i][0]  = right[i];
-        view_matrix[i][1]  = up[i];
-        view_matrix[i][2]  = direction[i];
-    }*/
-    
+    for(int i = 0; i <= 2; i++){
+        view_matrix[i][0]  = r[i];
+        view_matrix[i][1]  = u[i];
+        view_matrix[i][2]  = d[i];
+    }
 
-
-    
-    view_matrix[0] = glm::vec4(right,0.f);
-    view_matrix[1] = glm::vec4(up,0.f);
-    view_matrix[2] = glm::vec4(direction,0.f);
-    
+    view_matrix[3][0] = (r.x*t.x)+(r.y*t.y)+(r.z*t.z);
+    view_matrix[3][1] = (u.x*t.x)+(u.y*t.y)+(u.z*t.z);
+    view_matrix[3][2] = (d.x*t.x)+(d.y*t.y)+(d.z*t.z);
 
     return view_matrix;
 }

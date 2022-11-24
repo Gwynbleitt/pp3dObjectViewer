@@ -47,13 +47,10 @@ Program::Program(){
         printf("failed to load GLAD\n");
     }
 
-    cam1 = new camera(glm::vec3(0.f),glm::vec3(0.f));
-
     translation = glm::vec3(0.0f);
-    rotation = glm::vec2(-0.5*PI,0.f);
+    rotation = glm::vec2(0.5*PI,0.f);
     view_matrix = glm::mat4(1.0f);
     projection_matrix = glm::mat4(1.0f);
-    transform_matrix = glm::mat4(1.0f);
 }
 
 Program::~Program(){
@@ -95,62 +92,42 @@ void Program::createmesh(int vertices_size, int indices_size, float* vertex_cord
 
     glEnable(GL_DEPTH_TEST);
 
+    cam1 = new camera(glm::vec3(0.f,0.f,-10.f),shader_object->shader_program, "camera_pos");
+
     // projection matrix
     glfwGetFramebufferSize(win, &fbwidth, &fbheight);
     projection_matrix = glm::proj_matrix_my(projection_matrix, 90.f, fbwidth / (float) fbheight , 0.1f, 2.f);
-    //projection_matrix[2][3] = -1.0f;
-    glm::print_matrix<glm::mat4>(projection_matrix,4);
-    
-
 }
 
 void Program::drawmesh(glm::vec3 translate, glm::vec2 rotate){
+    double cx, cy;
 
-
-    
     glUseProgram(shader_object -> shader_program);
-    glBindVertexArray(VAO);
+    
     glfwGetFramebufferSize(win, &fbwidth, &fbheight);
+    glfwGetCursorPos(win, &cx, &cy);
 
-    //transform_matrix =  cam1->translate(transform_matrix, translate);
-    //translate = glm::vec3(cos(glfwGetTime()) * 1.f, 0.0f, sin(glfwGetTime()) * 1.f);
-    //cam1->pos = translate;
-    
-    //direction.x = cos(rotate.x)*cos(rotate.y);
-    //direction.y = sin(rotate.y);
-    //direction.z = sin(rotate.x)*cos(rotate.y);
+    cx -= fbwidth/2;
+    cy -= fbheight/2;
 
+    cx/=-180;
+    cy/=180;
 
-    //translate = glm::vec3(0.0f);
+    cx+=PI/2;
 
+    std::cout << cx << ',' << cy << '\n';
 
-   
+    direction = glm::rotate2<glm::vec3>(direction, cx, cy);
+    direction2d = glm::rotate1<glm::vec2>(direction2d, cx);
 
-    float camx = sin(glfwGetTime()) * 1.f;
-    float camz = cos(glfwGetTime()) * 1.f;
-    //cam1->pos = ;
-    //direction = glm::vec3(0.f,0.f,1.f);
-    
-    
-    transform_matrix = cam1->translate(transform_matrix, glm::vec3(camx,0.f,camz));
-    view_matrix = cam1->lookat(view_matrix,direction);
+    view_matrix = cam1->lookat(view_matrix,direction,translate);
     projection_matrix = glm::proj_matrix_my(projection_matrix, 45, fbwidth / (float) fbheight , 1.f, 100.0f);
-    
-    //transform_matrix = glm::rotateY(transform_matrix,4,rotate[0]);
 
-    std::cout << "------------------\n";
-    glm::print_matrix<glm::mat4>(view_matrix,4); 
-    
-    glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "transform"), 1, false, glm::value_ptr(transform_matrix));
     glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "projection"), 1, false, glm::value_ptr(projection_matrix));
     glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "view"), 1, false, glm::value_ptr(view_matrix));
+    
     glDrawElements(GL_TRIANGLES,n_vertices,GL_UNSIGNED_INT,0);
-    glBindVertexArray(0);
 }
 
-void Program::redraw(){
-    //glClearColor(0.0f,0.0f,0);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-}
 
 
