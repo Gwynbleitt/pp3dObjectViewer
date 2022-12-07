@@ -1,5 +1,8 @@
 {
     "files.associations": {
+        "cmath": "cpp",
+        "new": "cpp",
+        "iostream": "cpp",
         "array": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
@@ -8,7 +11,6 @@
         "chrono": "cpp",
         "cinttypes": "cpp",
         "clocale": "cpp",
-        "cmath": "cpp",
         "codecvt": "cpp",
         "compare": "cpp",
         "complex": "cpp",
@@ -53,11 +55,9 @@
         "initializer_list": "cpp",
         "iomanip": "cpp",
         "iosfwd": "cpp",
-        "iostream": "cpp",
         "istream": "cpp",
         "limits": "cpp",
         "mutex": "cpp",
-        "new": "cpp",
         "numbers": "cpp",
         "ostream": "cpp",
         "semaphore": "cpp",

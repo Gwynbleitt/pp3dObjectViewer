@@ -1,118 +1,6 @@
 #include "obj_loader.h"
 #include <math.h>
 
-/*float* obj_loader::load_vert(){
-
-    std::string line, tmp;
-    std::ifstream file;
-    vertex_n = 0;
-    int arr_pos = 0;
-
-    file.open( path );
-
-    for(int i=0;i<=3;i++) getline(file,line);
-
-    if(file.is_open()){
-        while(getline(file,line)&&line[0]=='v'){
-            vertex_n++;
-        }
-    }
-    file.close(); 
-
-    float* read = new float[vertex_n*3];
-
-    file.open( path );
-
-    for(int i=0;i<=3;i++) getline(file,line);
-    
-    if(file.is_open()){
-
-        
-        while(getline(file,line)&&line[0]=='v'){
-            
-            for(int i = 2; i < line.length()+1; i++){
-                if(line[i]!=' ' && i!=line.length()) {
-                    tmp.push_back(line[i]);
-        
-                }
-                else{
-                    read[arr_pos] = std::stof(tmp,NULL);
-                    arr_pos++;
-                    tmp.clear();
-                }
-            }
-        }
-    }
-
-    file.close(); 
-
-    return read;
-}
-
-unsigned int* obj_loader::load_index(){
-
-    std::string line;
-    std::ifstream file;
-    index_n = 0;
-    int arr_pos = 0;
-    int j = 0;
-    unsigned int tmp = 0;
-
-    file.open( path );
-
-    for(int i=0;i<=2016;i++) getline(file,line);
-    
-    if(file.is_open()){
-        while(getline(file,line)&&line[0]=='f'){
-            index_n++;
-        }
-    }
-
-    file.close(); 
-
-    std::cout << index_n << '\n';
-
-    unsigned int* readi = new unsigned int[3*index_n];
-
-    file.open( path );
-
-    for(int i=0;i<=2016;i++) getline(file,line);
-
-    
-    
-    if(file.is_open()){
-
-        //arr_pos = 0;
-        while(getline(file,line)&&line[0]=='f'){
-            
-            //std::cout << line;
-            for(int i = line.length()-1; i > 0; i--){
-               
-                
-                if(line[i]!=' ' && i!=1) {
-                    tmp+=(((int)line[i]-48)*pow(10,j));
-                    j++;
-                }
-                else{
-                    readi[ arr_pos - (arr_pos%3) + abs((arr_pos%3)-2)] = tmp-1;
-                    //std::cout << "ap" << arr_pos << ',';
-                    arr_pos++;
-                    tmp = 0;
-                    j = 0;
-                }
-                
-            }
-            
-          
-        }
-    }
-    
-    
-
-    file.close(); 
-    return readi;
-}
-*/
 
 void obj_loader::load(){
 
@@ -145,59 +33,97 @@ void obj_loader::load(){
     file.open( path );
 
     vertex = new float[vertex_n];
+    normals = new float[vertex_n];
     index = new unsigned int[index_n];
 
 
     std::string tmp;
+    std::string type;
     int tmpi;
     int arr_pos = 0;
+    int arr_pos_n = 0;
+    int arr_pos_f = 0;
     int j = 0;
+
 
     for(int i=0;i<=2;i++) getline(file,line);
     
     if(file.is_open()){
-        while(getline(file,line)&&line[0]=='v'){
-            
-            for(int i = 2; i < line.length()+1; i++){
-                if(line[i]!=' ' && i!=line.length()) {
-                    tmp.push_back(line[i]);
+
+
+        //get vertex cordinates and vertex index and normal index
         
-                }
-                else{
-                    vertex[arr_pos] = std::stof(tmp,NULL)/2;
-                    arr_pos++;
-                    tmp.clear();
+        while(getline(file,line)){
+
+            if(line[0]='v'){
+
+                for(int i = 2; i < line.length()+1; i++){
+                    if(line[i]!=' ' && i!=line.length()) {
+                        tmp.push_back(line[i]);
+            
+                    }
+                    else{
+                        vertex[arr_pos] = std::stof(tmp,NULL)/2;
+                        arr_pos++;
+                        tmp.clear();
+                    }
                 }
             }
-        }
 
-        //getline(file,line);
-        arr_pos = 0;
+            else if(line[0]='f'){
 
-        while(getline(file,line)&&line[0]=='f'){
-            
-            //std::cout << line;
-            for(int i = line.length()-1; i > 0; i--){
+                for(int i = line.length()-1; i > 0; i--){
                
-                
-                if(line[i]!=' ' && i!=1) {
-                    tmpi+=(((int)line[i]-48)*pow(10,j));
-                    j++;
+                    if(line[i]!=' ' && i!=1) {
+                        tmpi+=(((int)line[i]-48)*pow(10,j));
+                        j++;
+                    }
+                    else{
+                        index[ arr_pos_f - (arr_pos_f%3) + abs((arr_pos_f%3)-2)] = tmpi-1;
+                        arr_pos_f++;
+                        tmpi = 0;
+                        j = 0;
+                    }
                 }
-                else{
-                    index[ arr_pos - (arr_pos%3) + abs((arr_pos%3)-2)] = tmpi-1;
-                   // std::cout << index[arr_pos] << ',';
-                    arr_pos++;
-                    tmpi = 0;
-                    j = 0;
-                }
-                
-            }
-
-           // std::cout << '\n';
             
-          
+            }
         }
+
+        file.close();
+        file.open( path );
+
+        while(getline(file,line)){
+            type = line.substr(0,2);
+            if(type == "vn"){
+
+            }
+        }
+        
+
+        //reset
+        //get normals based on indieces
+
+        /* 
+
+        for every line ->
+
+        look up position of i in normal index array
+
+        find value on same position but in vertex index array
+
+        insert the value into returned index
+
+        */
+
+        //e.g normal 1 -> vertex 47
+        //this way referencing vertex index will have also correct normal
+        //vertex attribute array should look like this:
+        /*
+
+        vx1, vy1, vz1, nx23, ny23, nz23,
+        ...
+
+        */
     }
 
     file.close();

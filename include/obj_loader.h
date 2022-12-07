@@ -14,8 +14,11 @@ class obj_loader{
 
     int index_n;
     int vertex_n;
+    int normal_n;
 
     float* vertex;
+    float* normals;
+
     unsigned int* index;
 
     void load();
