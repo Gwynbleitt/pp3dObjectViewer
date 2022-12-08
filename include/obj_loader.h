@@ -20,10 +20,12 @@ class obj_loader{
     float* normals;
 
     unsigned int* index;
+    unsigned int* normal_index;
 
     void load();
 
     float* load_vert();
     unsigned int* load_index();
+    int find(unsigned int* arr, int a, int size);
 
 };

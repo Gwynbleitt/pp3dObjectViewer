@@ -7,10 +7,19 @@ int main(int argc, char* argv[]){
 
         obj_loader* loader = new obj_loader;
 
-        loader->path = "../models/suzanne.obj";
+        loader->path = "../models/suzanne_n.obj";
         loader->load();
 
-        float vertex_attr [loader->vertex_n*2];
+        std::cout << "vertexnormal: " << loader->vertex_n << '\n';
+
+       /* for(int i = 0; i < loader->normal_n; i++){
+            if(!(i%3)) std::cout << '\n';
+            std::cout << loader->normals[i] << ' ';
+        }
+
+        
+
+       float vertex_attr [loader->vertex_n*2];
 
         int i_v = 0;
         int i_n = 0;
@@ -19,12 +28,12 @@ int main(int argc, char* argv[]){
 
         for(int i = 0; i < loader->vertex_n*2; i++ ){
 
-            if(!(i%3)) vorn = abs(vorn-1);
+           // if(!(i%3)) vorn = abs(vorn-1);
 
-            if(vorn) vertex_attr[i] = loader->vertex[i-((i-(i%3))/2)];
-            else     vertex_attr[i] = loader->normals[i-(((i+3)-(i%3))/2)];
+          //  if(vorn) vertex_attr[i] = loader->vertex[i-((i-(i%3))/2)];
+          //  else     vertex_attr[i] = loader->normals[i-(((i+3)-(i%3))/2)];
             
-        }
+        } */
 
   
 
@@ -38,6 +47,7 @@ int main(int argc, char* argv[]){
         program -> Event_Loop(0.05f);
 
         delete program;
+        
         
         return EXIT_SUCCESS;
     

@@ -64,11 +64,6 @@ Program::~Program(){
 
 
 void Program::createmesh(int vertices_size, int indices_size, float* vertex_cordinates, unsigned int* indices){
-    std::cout << "index size" << indices_size << '\n';
-    for(int i = 0; i < indices_size; i++){
-        std::cout << indices[i] << ',';
-        //if(i%3==0)std::cout << '\n';
-    }
 
     shader_object = new shader("../shaders/shader.vert","../shaders/shader.frag");
 
@@ -114,8 +109,6 @@ void Program::drawmesh(glm::vec3 translate, glm::vec2 rotate){
     cy/=180;
 
     cx+=PI/2;
-
-    std::cout << cx << ',' << cy << '\n';
 
     direction = glm::rotate2<glm::vec3>(direction, cx, cy);
     direction2d = glm::rotate1<glm::vec2>(direction2d, cx);
