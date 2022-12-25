@@ -51,6 +51,7 @@ Program::Program(){
     rotation = glm::vec2(0.5*PI,0.f);
     view_matrix = glm::mat4(1.0f);
     projection_matrix = glm::mat4(1.0f);
+    light_src = glm::vec3(0.5f,0.f,0.5f);
 }
 
 Program::~Program(){
@@ -60,6 +61,7 @@ Program::~Program(){
     delete shader_object;
     glfwDestroyWindow(win);
     glfwTerminate();
+
 }
 
 
@@ -77,11 +79,16 @@ void Program::createmesh(int vertices_size, int indices_size, float* vertex_cord
 
     glBufferData(GL_ARRAY_BUFFER, vertices_size, vertex_cordinates, GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_size, indices, GL_STATIC_DRAW);
-    //position attribute 
-    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 3*sizeof(float), (void*)0 );
-    glEnableVertexAttribArray(0);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, 0, 6*sizeof(float), (void*)0 ); //position attribute 
+    glVertexAttribPointer(1, 3, GL_FLOAT, 0, 6*sizeof(float), (void*)(3*sizeof(float))); //normal attribute
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     n_vertices = indices_size/sizeof(int);
 
@@ -92,12 +99,13 @@ void Program::createmesh(int vertices_size, int indices_size, float* vertex_cord
     // projection matrix
     glfwGetFramebufferSize(win, &fbwidth, &fbheight);
     projection_matrix = glm::proj_matrix_my(projection_matrix, 90.f, fbwidth / (float) fbheight , 0.1f, 2.f);
+
+    glUseProgram(shader_object -> shader_program);
 }
 
 void Program::drawmesh(glm::vec3 translate, glm::vec2 rotate){
-    double cx, cy;
 
-    glUseProgram(shader_object -> shader_program);
+    
     
     glfwGetFramebufferSize(win, &fbwidth, &fbheight);
     glfwGetCursorPos(win, &cx, &cy);
@@ -110,15 +118,20 @@ void Program::drawmesh(glm::vec3 translate, glm::vec2 rotate){
 
     cx+=PI/2;
 
-    direction = glm::rotate2<glm::vec3>(direction, cx, cy);
-    direction2d = glm::rotate1<glm::vec2>(direction2d, cx);
+    if(glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) light_src = glm::vec3(sin(cx),0.f,cos(cx));
+    else
+    {
+        direction = glm::rotate2<glm::vec3>(direction, cx, cy);
+        direction2d = glm::rotate1<glm::vec2>(direction2d, cx);
+    }
 
     view_matrix = cam1->lookat(view_matrix,direction,translate);
     projection_matrix = glm::proj_matrix_my(projection_matrix, 45, fbwidth / (float) fbheight , 1.f, 100.0f);
 
     glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "projection"), 1, false, glm::value_ptr(projection_matrix));
     glUniformMatrix4fv(glGetUniformLocation(shader_object -> shader_program, "view"), 1, false, glm::value_ptr(view_matrix));
-    
+    glUniform3fv(glGetUniformLocation(shader_object -> shader_program, "light_src"),1, glm::value_ptr(light_src));
+
     glDrawElements(GL_TRIANGLES,n_vertices,GL_UNSIGNED_INT,0);
 }
 

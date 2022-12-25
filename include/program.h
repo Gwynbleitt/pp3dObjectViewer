@@ -13,11 +13,14 @@ class Program{
       const GLFWvidmode   *vid_mode;
       shader              *shader_object;
       int                 n_vertices;
+      double              cx, cy;
 
       glm::vec3 translation;
       glm::vec3 direction;
       glm::vec2 direction2d;
       glm::vec2 rotation; //yaw, pitch
+
+      glm::vec3 light_src;
 
       glm::mat4 view_matrix;
       glm::mat4 projection_matrix;

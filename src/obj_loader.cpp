@@ -4,24 +4,32 @@
 #include <string>
 
 
-int obj_loader::find(unsigned int* arr, int a, int size){
-    bool found = 0;
-    int o = 0;
+int obj_loader::find(unsigned int* arr, int a, int size)
+{
 
-    while(!found && o < size){
-        if(a==arr[o]){
-            found = 1;
+    // NOT FOUND -> -1
+
+    int i = 0;
+    bool out = 0;
+
+    while(i < size)
+    {
+        if(arr[i] == a)
+        {
+            out = 1;
+            break;
         }
-        o++;
-        std::cout << o << '\n';
+
+        i++;
     }
 
-    if(found) return o-1; 
-    else return 0;
+    return out == 1 ? i : -1;
+
 }
 
 
-void obj_loader::load(){
+void obj_loader::load()
+{
 
     std::string line;
     std::ifstream file;
@@ -72,18 +80,21 @@ void obj_loader::load(){
     if(file.is_open()){
 
         
-        while(getline(file,line)){
+        while(getline(file,line))
+        {
 
             type = line.substr(0,2);
 
             if(type=="v "){
                 //std::cout << line << '\n';
-                for(int i = 2; i < line.length()+1; i++){
-                    if(line[i]!=' ' && i!=line.length()) {
+                for(int i = 2; i < line.length()+1; i++)
+                {
+                    if(line[i]!=' ' && i!=line.length())
+                    {
                         tmp.push_back(line[i]);
-            
                     }
-                    else{
+                    else
+                    {
                         vertex[arr_pos] = std::stof(tmp,NULL);
                         arr_pos++;
                         tmp.clear();
@@ -95,16 +106,20 @@ void obj_loader::load(){
             
             else if(type=="f "){
 
-                for(int i = 2;  i < line.length()+1; i++){
+                for(int i = 2;  i < line.length()+1; i++)
+                {
 
-                    if(line[i]<'0' || line[i]>'9'){
+                    if(line[i]<'0' || line[i]>'9')
+                    {
 
                         arr[tmp_x][tmp_y] = j ? std::stoi(line.substr(i-j,j)) : -1;
                         
-                        if(!(tmp_x%3)){
+                        if(!(tmp_x%3))
+                        {
                             tmp_x = 0;
                             tmp_y++;
-                        }else tmp_x++;
+                        }
+                        else tmp_x++;
                         
                         j = 0;
                     } else j++;       
@@ -113,13 +128,9 @@ void obj_loader::load(){
                 for(int q = 0; q < 3; q++){
                         index[arr_pos_f] = arr[q][0]-1;
                         normal_index[arr_pos_f] = arr[q][2]-1;
-
-                       // std::cout << arr[q][0] << ',' << arr[q][2] << ' ';
                         arr_pos_f++;
                 }   
-
-               // std::cout << '\n';    
-
+                
                 tmp_x, tmp_y = 0; 
             
             }
@@ -129,21 +140,34 @@ void obj_loader::load(){
         file.close();
         file.open( path );
 
-        j = 1;
+        j = 0;
+        arr_pos = 0;
+        tmp.clear();
 
-        if(file.is_open()){
-            
+        int vnb[3];
 
-            while(getline(file, line)){
+        if(file.is_open()){           
+
+            while(getline(file, line))
+            {
+
                 type=line.substr(0,2);
-                if(type=="vn"){
-                    
-                    for(int k = 0; k < index_n; k++){
-                        if (normal_index[k]==j){
-                            std::cout << vertex[index[k]]<< '\n';
-                            break;
+                
+                if(type=="vn")
+                {
+
+                    for(int i = 3; i < line.length()+1; i++){
+                        if(line[i]!=' ' && i!=line.length()) {
+                            tmp.push_back(line[i]);
+                        }
+                        else{
+                            normals[3*index[find(normal_index, j, normal_n)]+arr_pos] = std::stof(tmp, NULL);
+                            arr_pos++;
+
+                            tmp.clear();
                         }
                     }
+                    arr_pos = 0;
                     j++;
                 }
                 
