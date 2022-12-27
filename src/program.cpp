@@ -42,6 +42,8 @@ Program::Program(){
     glfwSetKeyCallback(win, key_callback);
     glfwSetFramebufferSizeCallback(win, framebuffer_size_callback);
 
+    glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)){
         delete this;
         printf("failed to load GLAD\n");
@@ -106,19 +108,12 @@ void Program::createmesh(int vertices_size, int indices_size, float* vertex_cord
 void Program::drawmesh(glm::vec3 translate, glm::vec2 rotate){
 
     
-    
-    glfwGetFramebufferSize(win, &fbwidth, &fbheight);
     glfwGetCursorPos(win, &cx, &cy);
 
-    cx -= fbwidth/2;
-    cy -= fbheight/2;
+    cx = (cx-(fbwidth/2))/-180 + PI/2;
+    cy = (cy-(fbheight/2))/180;
 
-    cx/=-180;
-    cy/=180;
-
-    cx+=PI/2;
-
-    if(glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) light_src = glm::vec3(sin(cx),0.f,cos(cx));
+    if(glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) light_src = glm::vec3(sin(cx)*cos(cy),sin(cy),cos(cx)*cos(cy));
     else
     {
         direction = glm::rotate2<glm::vec3>(direction, cx, cy);

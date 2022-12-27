@@ -2,29 +2,20 @@
 #include <math.h>
 #include <algorithm> 
 #include <string>
+#include <stdlib.h>
 
 
 int obj_loader::find(unsigned int* arr, int a, int size)
 {
-
-    // NOT FOUND -> -1
-
     int i = 0;
-    bool out = 0;
 
     while(i < size)
     {
-        if(arr[i] == a)
-        {
-            out = 1;
-            break;
-        }
-
+        if(arr[i] == a) break;   
         i++;
     }
 
-    return out == 1 ? i : -1;
-
+    return i;
 }
 
 
@@ -51,11 +42,16 @@ void obj_loader::load()
             if(type=="f ") index_n++;
             if(type=="vn") normal_n++;
         }
+    } else 
+    {
+        std::cout << "FILE NOT FOUND" << '\n';
+        exit(EXIT_FAILURE);
     }
 
     index_n *= 3;
     vertex_n *= 3;
     normal_n *= 3;
+
 
     file.close();
     file.open( path );
@@ -67,7 +63,6 @@ void obj_loader::load()
 
 
     std::string tmp;
-    int tmpi;
     int arr_pos = 0;
     int arr_pos_n = 0;
     int arr_pos_f = 0;
@@ -144,9 +139,9 @@ void obj_loader::load()
         arr_pos = 0;
         tmp.clear();
 
-        int vnb[3];
+        if(file.is_open()){   
 
-        if(file.is_open()){           
+            std::cout << "LOADING" << '\n';        
 
             while(getline(file, line))
             {
@@ -155,7 +150,6 @@ void obj_loader::load()
                 
                 if(type=="vn")
                 {
-
                     for(int i = 3; i < line.length()+1; i++){
                         if(line[i]!=' ' && i!=line.length()) {
                             tmp.push_back(line[i]);
@@ -173,38 +167,8 @@ void obj_loader::load()
                 
             }
         }
-        //get normals based on indieces
-
-        /* 
-
-        for every line ->
-
-        look up position of i in normal index array
-
-        find value on same position but in vertex index array
-
-        insert the value into returned index
-
-        */
-
-        //e.g normal 1 -> vertex 47
-        //this way referencing vertex index will have also correct normal
-        //vertex attribute array should look like this:
-        /*
-
-        vx1, vy1, vz1, nx23, ny23, nz23,
-        ...
-
-        */
     }
 
     file.close();
-    //file.open( path );
-
-
-
-
-    //indicies
-
 
 }

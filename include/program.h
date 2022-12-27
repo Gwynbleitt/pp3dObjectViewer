@@ -14,6 +14,7 @@ class Program{
       shader              *shader_object;
       int                 n_vertices;
       double              cx, cy;
+      double              sx, sy;
 
       glm::vec3 translation;
       glm::vec3 direction;
